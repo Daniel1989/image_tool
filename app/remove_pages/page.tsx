@@ -24,14 +24,14 @@ interface FeatureRequest {
   id: string;
   title: string;
   description: string;
-  userName?: string;
-  userEmail?: string;
+  user_name?: string;
+  user_email?: string;
   priority: string;
   status: string;
   votes: number;
-  isHidden: boolean;
-  createdAt: string;
-  updatedAt: string;
+  is_hidden: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 const PRIORITY_OPTIONS = [
@@ -158,7 +158,7 @@ export default function AdminPage() {
   };
 
   const toggleVisibility = async (request: FeatureRequest) => {
-    await updateFeatureRequest(request.id, { isHidden: !request.isHidden });
+    await updateFeatureRequest(request.id, { is_hidden: !request.is_hidden });
   };
 
   const formatDate = (dateString: string) => {
@@ -185,7 +185,7 @@ export default function AdminPage() {
   };
 
   const filteredRequests = featureRequests.filter(request => {
-    if (!showHidden && request.isHidden) return false;
+    if (!showHidden && request.is_hidden) return false;
     if (filterStatus !== 'ALL' && request.status !== filterStatus) return false;
     if (filterPriority !== 'ALL' && request.priority !== filterPriority) return false;
     return true;
@@ -196,7 +196,7 @@ export default function AdminPage() {
     pending: featureRequests.filter(r => r.status === 'PENDING').length,
     inProgress: featureRequests.filter(r => r.status === 'IN_PROGRESS').length,
     completed: featureRequests.filter(r => r.status === 'COMPLETED').length,
-    hidden: featureRequests.filter(r => r.isHidden).length
+    hidden: featureRequests.filter(r => r.is_hidden).length
   };
 
   // Login Dialog
@@ -457,12 +457,12 @@ export default function AdminPage() {
                   {filteredRequests.map((request) => {
                     const StatusIcon = getStatusIcon(request.status);
                     return (
-                      <tr key={request.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${request.isHidden ? 'opacity-50' : ''}`}>
+                      <tr key={request.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${request.is_hidden ? 'opacity-50' : ''}`}>
                         <td className="px-6 py-4">
                           <div>
                             <div className="font-medium text-gray-900 dark:text-white">
                               {request.title}
-                              {request.isHidden && (
+                              {request.is_hidden && (
                                 <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                                   Hidden
                                 </span>
@@ -476,16 +476,16 @@ export default function AdminPage() {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
                           <div>
-                            {request.userName && (
+                            {request.user_name && (
                               <div className="flex items-center gap-1">
                                 <User className="w-3 h-3" />
-                                {request.userName}
+                                {request.user_name}
                               </div>
                             )}
-                            {request.userEmail && (
+                            {request.user_email && (
                               <div className="flex items-center gap-1 text-gray-500">
                                 <Mail className="w-3 h-3" />
-                                {request.userEmail}
+                                {request.user_email}
                               </div>
                             )}
                           </div>
@@ -534,7 +534,7 @@ export default function AdminPage() {
                         <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
-                            {formatDate(request.createdAt)}
+                            {formatDate(request.created_at)}
                           </div>
                         </td>
                         <td className="px-6 py-4">
@@ -546,12 +546,12 @@ export default function AdminPage() {
                             >
                               <Edit className="w-4 h-4" />
                             </button>
-                            <button
+                            {/* <button
                               onClick={() => toggleVisibility(request)}
                               className="text-yellow-600 hover:text-yellow-700 transition-colors"
-                              title={request.isHidden ? 'Show' : 'Hide'}
+                              title={request.is_hidden ? 'Show' : 'Hide'}
                             >
-                              {request.isHidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                              {request.is_hidden ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                             </button>
                             <button
                               onClick={() => deleteFeatureRequest(request.id)}
@@ -559,7 +559,7 @@ export default function AdminPage() {
                               title="Delete"
                             >
                               <Trash2 className="w-4 h-4" />
-                            </button>
+                            </button> */}
                           </div>
                         </td>
                       </tr>

@@ -1,70 +1,82 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { supabase } from '@/lib/supabase'
 
-export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  request: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
   const params = await props.params;
   try {
-    const { id } = params
-    const body = await request.json()
-    const { status, priority, isHidden } = body
+    const { id } = params;
+    const body = await request.json();
 
-    const featureRequest = await prisma.featureRequest.findUnique({
-      where: { id }
-    })
+    // Prepare the update data, converting camelCase to snake_case where needed
+    const updateData: Record<string, string | number | boolean> = {};
+    
+    if (body.priority !== undefined) updateData.priority = body.priority;
+    if (body.status !== undefined) updateData.status = body.status;
+    if (body.isHidden !== undefined) updateData.is_hidden = body.isHidden;
+    if (body.votes !== undefined) updateData.votes = body.votes;
 
-    if (!featureRequest) {
+    const { data: updatedRequest, error } = await supabase
+      .from('feature_requests')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating feature request:', error);
+      return NextResponse.json(
+        { error: 'Failed to update feature request' },
+        { status: 500 }
+      );
+    }
+
+    if (!updatedRequest) {
       return NextResponse.json(
         { error: 'Feature request not found' },
         { status: 404 }
-      )
+      );
     }
 
-    const updateData: { status?: string; priority?: string; isHidden?: boolean } = {}
-    if (status !== undefined) updateData.status = status
-    if (priority !== undefined) updateData.priority = priority
-    if (isHidden !== undefined) updateData.isHidden = isHidden
-
-    const updatedRequest = await prisma.featureRequest.update({
-      where: { id },
-      data: updateData
-    })
-
-    return NextResponse.json(updatedRequest)
+    return NextResponse.json(updatedRequest);
   } catch (error) {
-    console.error('Error updating feature request:', error)
+    console.error('Error in admin feature request PATCH:', error);
     return NextResponse.json(
-      { error: 'Failed to update feature request' },
+      { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 }
 
-export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
   const params = await props.params;
   try {
-    const { id } = params
+    const { id } = params;
 
-    const featureRequest = await prisma.featureRequest.findUnique({
-      where: { id }
-    })
+    const { error } = await supabase
+      .from('feature_requests')
+      .delete()
+      .eq('id', id);
 
-    if (!featureRequest) {
+    if (error) {
+      console.error('Error deleting feature request:', error);
       return NextResponse.json(
-        { error: 'Feature request not found' },
-        { status: 404 }
-      )
+        { error: 'Failed to delete feature request' },
+        { status: 500 }
+      );
     }
 
-    await prisma.featureRequest.delete({
-      where: { id }
-    })
-
-    return NextResponse.json({ message: 'Feature request deleted successfully' })
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting feature request:', error)
+    console.error('Error in admin feature request DELETE:', error);
     return NextResponse.json(
-      { error: 'Failed to delete feature request' },
+      { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 } 

@@ -1,20 +1,29 @@
-import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 export async function GET() {
   try {
-    const featureRequests = await prisma.featureRequest.findMany({
-      orderBy: [
-        { createdAt: 'desc' }
-      ]
-    })
-    
-    return NextResponse.json(featureRequests)
+    // Admin can see all feature requests including hidden ones
+    const { data: featureRequests, error } = await supabase
+      .from('feature_requests')
+      .select('*')
+      .order('votes', { ascending: false })
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching admin feature requests:', error);
+      return NextResponse.json(
+        { error: 'Failed to fetch feature requests' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(featureRequests);
   } catch (error) {
-    console.error('Error fetching feature requests for admin:', error)
+    console.error('Error in admin feature requests GET:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch feature requests' },
+      { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 } 
