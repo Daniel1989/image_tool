@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model FeatureRequest {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  userName    String?
+  userEmail   String?
+  priority    String   @default("LOW") // LOW, MEDIUM, HIGH, URGENT
+  status      String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, REJECTED
+  votes       Int      @default(0)
+  isHidden    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+
+  @@map("feature_requests")
+}
