@@ -19,7 +19,7 @@ export async function PATCH(request: NextRequest, props: { params: Promise<{ id:
       )
     }
 
-    const updateData: any = {}
+    const updateData: { status?: string; priority?: string; isHidden?: boolean } = {}
     if (status !== undefined) updateData.status = status
     if (priority !== undefined) updateData.priority = priority
     if (isHidden !== undefined) updateData.isHidden = isHidden

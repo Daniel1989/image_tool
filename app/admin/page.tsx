@@ -16,7 +16,6 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-  AlertTriangle,
   Lock,
   LogOut
 } from 'lucide-react';
@@ -93,6 +92,7 @@ export default function AdminPage() {
         setLoginError(data.error || 'Login failed');
       }
     } catch (error) {
+      console.error('Error logging in:', error);
       setLoginError('Network error. Please try again.');
     } finally {
       setIsLoggingIn(false);

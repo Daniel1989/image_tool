@@ -7,11 +7,7 @@ import {
   Download, 
   Settings, 
   Image as ImageIcon, 
-  Crop, 
-  RotateCw,
-  Palette,
   Sliders,
-  Monitor,
   Printer,
   ArrowLeft,
   Maximize2,
@@ -20,7 +16,6 @@ import {
   MessageSquare,
   ThumbsUp,
   Send,
-  Star,
   Shield
 } from 'lucide-react';
 
@@ -738,7 +733,7 @@ export default function ImageTools() {
                       </label>
                       <select
                         value={options.format}
-                        onChange={(e) => setOptions(prev => ({ ...prev, format: e.target.value as any }))}
+                        onChange={(e) => setOptions(prev => ({ ...prev, format: e.target.value as 'jpeg' | 'png' | 'webp' }))}
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
                         <option value="jpeg">JPEG</option>
