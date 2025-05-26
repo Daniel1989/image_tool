@@ -400,7 +400,7 @@ export default function ImageTools() {
           </div>
 
           {/* Admin Link */}
-          <div className="mt-8 text-center">
+          {/* <div className="mt-8 text-center">
             <a
               href="/admin"
               className="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
@@ -408,7 +408,7 @@ export default function ImageTools() {
               <Shield className="w-4 h-4" />
               Admin Panel
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     );
